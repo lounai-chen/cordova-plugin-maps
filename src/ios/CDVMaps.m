@@ -49,11 +49,8 @@
         else{
             //没有安装地图APP
             
-            CDVPluginResult*pluginResult =nil;
-            
-            NSString*callbackidStr= @"请安装地图APP";
-            pluginResult=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"建议按照高德地图APP"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackidStr];
+            CDVPluginResult*pluginResult =[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"建议安装高德地图APP"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
         }
 
