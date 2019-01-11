@@ -31,7 +31,15 @@
 		  </config-file>  
           <!-- 源文件 -->
         <header-file src="src/ios/CDVMaps.h" />  
-        <source-file src="src/ios/CDVMaps.m" />   
+        <source-file src="src/ios/CDVMaps.m" /> 
+	     
+	 <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <array>
+                <string>iosamap</string>
+                <string>baidumap</string>
+            </array>
+        </config-file>
+	     
     </platform>  
 
  
