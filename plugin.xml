@@ -21,8 +21,7 @@
         <source-file src="src/android/Maps.java" target-dir="src/org/apache/cordova/maps" />
     </platform> 
 
-	
-	 <!-- ios平台的配置   -->
+     <!-- ios平台的配置   -->
      <platform name="ios">  
 		  <config-file target="config.xml" parent="/*">    
 			  <feature name="Maps">  
@@ -33,11 +32,17 @@
         <header-file src="src/ios/CDVMaps.h" />  
         <source-file src="src/ios/CDVMaps.m" /> 
 	     
+	<framework src="CoreLocation.framework" weak="true"/>
+	     
 	 <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
                 <string>iosamap</string>
                 <string>baidumap</string>
             </array>
+        </config-file>
+	     
+	<config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+            <string>是否允许使用您当前的位置信息？</string>
         </config-file>
 	     
     </platform>  
