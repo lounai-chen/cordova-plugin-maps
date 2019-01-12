@@ -8,7 +8,7 @@ var maps = {
     //GPS导航  arg0：经度  arg1：纬度
     gps:function(success,error,arg0,arg1){
         exec(success, error, 'Maps', 'gps', [arg0,arg1]);
-    }
+    },
     // 获取我当前的位置 IOS，返回GPS
     getMyLocation:function(success,error){
         exec(success, error, 'Maps', 'gps', []);
