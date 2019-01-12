@@ -6,7 +6,9 @@
 
 #import "CDVMaps.h"
 #import <CoreLocation/CoreLocation.h>
-@interface CDVMaps ()<CLLocationManagerDelegate>
+@interface CDVMaps ()<CLLocationManagerDelegate> {
+    NSString *callbackId_all;
+}
 
 @property (nonatomic , strong) CLLocationManager *locationManager;
 
@@ -30,7 +32,7 @@
     }];
     [alert addAction:ok];
     [alert addAction:cacel];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 /*定位成功后则执行此代理方法*/
 #pragma mark 定位成功
@@ -38,54 +40,71 @@
     [_locationManager stopUpdatingLocation];
     /*旧值*/
     CLLocation * currentLocation = [locations lastObject];
-    CLGeocoder * geoCoder = [[CLGeocoder alloc]init];
+    NSString *current_x_y = [NSString stringWithFormat:@"%f,%f",currentLocation.coordinate.longitude,currentLocation.coordinate.latitude];
+    [self sendEvent:current_x_y];
     /*打印当前经纬度*/
-    NSLog(@"当前经纬度：%f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
-    /*地理反编码 -- 可以根据地理位置（经纬度）确认位置信息 （街道、门牌）*/
-    [geoCoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-        if (placemarks.count >0) {
-            CLPlacemark * placeMark = placemarks[0];
-            NSString  *currentCity = placeMark.locality;
-            if (!currentCity) {
-                currentCity = @"无法定位当前城市";
-            }
-            /*看需求定义一个全局变量来接受赋值*/
-            NSLog(@"%@",placeMark.country);/*当前国家*/
-            NSLog(@"当前城市%@",currentCity);/*当前城市*/
-            NSLog(@"%@",placeMark.subLocality);/*当前位置*/
-            NSLog(@"%@",placeMark.thoroughfare);/*当前街道*/
-            NSLog(@"%@",placeMark.name);/*具体地址 ** 市 ** 区** 街道*/
-            /*根据经纬度判断当前距离*/
-            /*这个地方需要double转字符串赋值到label上面*/
-//            self.headView.Distance.text =HZString(@"距您%.1fkm",[self getDistance:currentLocation.coordinate.latitude lng1:currentLocation.coordinate.longitude lat2:weiDouble lng2:jingDouble]);
-        }
-        else if (error == nil&&placemarks.count == 0){
-            NSLog(@"没有地址返回");
-        }
-        else if (error){
-            NSLog(@"location error:%@",error);
-        }
-    }];
+    NSLog(@"当前经纬度：%@",current_x_y);
+    //CLGeocoder * geoCoder = [[CLGeocoder alloc]init];
+   
+//    /*地理反编码 -- 可以根据地理位置（经纬度）确认位置信息 （街道、门牌）*/
+//    [geoCoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+//        if (placemarks.count >0) {
+//            CLPlacemark * placeMark = placemarks[0];
+//            NSString  *currentCity = placeMark.locality;
+//            if (!currentCity) {
+//                currentCity = @"无法定位当前城市";
+//            }
+//            /*看需求定义一个全局变量来接受赋值*/
+//            NSLog(@"%@",placeMark.country);/*当前国家*/
+//            NSLog(@"当前城市%@",currentCity);/*当前城市*/
+//            NSLog(@"%@",placeMark.subLocality);/*当前位置*/
+//            NSLog(@"%@",placeMark.thoroughfare);/*当前街道*/
+//            NSLog(@"%@",placeMark.name);/*具体地址 ** 市 ** 区** 街道*/
+//            /*根据经纬度判断当前距离*/
+//            /*这个地方需要double转字符串赋值到label上面*/
+////            self.headView.Distance.text =HZString(@"距您%.1fkm",[self getDistance:currentLocation.coordinate.latitude lng1:currentLocation.coordinate.longitude lat2:weiDouble lng2:jingDouble]);
+//        }
+//        else if (error == nil&&placemarks.count == 0){
+//            NSLog(@"没有地址返回");
+//        }
+//        else if (error){
+//            NSLog(@"location error:%@",error);
+//        }
+//    }];
 }
 
 // 获取我的位置
 - (void) getMyLocation:(CDVInvokedUrlCommand*)command
 {
+    [self.commandDelegate runInBackground:^{
+        callbackId_all = command.callbackId;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+        [result setKeepCallback:[NSNumber numberWithBool:YES]];
+        [self.commandDelegate sendPluginResult:result callbackId:callbackId_all];
+    }];
         //创建位置管理器（定位用户的位置）
     if([CLLocationManager locationServicesEnabled]){
         self.locationManager=[[CLLocationManager alloc]init];
         //2.设置代理
         self.locationManager.delegate=self;
         [self.locationManager requestAlwaysAuthorization];
-        NSString *currentCity = [NSString new];
         [self.locationManager requestWhenInUseAuthorization];
-        
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         self.locationManager.distanceFilter = 5.0;
         [self.locationManager startUpdatingLocation];
     }
 
 }
+
+- (void)sendEvent:(NSString *)dict {
+    if (!callbackId_all) return;
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:dict];
+    [result setKeepCallback:[NSNumber numberWithBool:YES]];
+    [self.commandDelegate sendPluginResult:result callbackId:callbackId_all];
+    
+}
+
 
     
 // 打开地图 -- 我的位置
