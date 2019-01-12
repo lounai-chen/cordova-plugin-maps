@@ -38,12 +38,12 @@ public class Maps extends CordovaPlugin {
                        android.net.Uri.parse("androidamap://myLocation?sourceApplication=softname"));
 			   cordova.startActivityForResult(null,intent,1); // 启动调用
 		   }
-		   else  if (isInstallByread("com.baidu.BaiduMap")) {
-			   //百度
-               Intent intent = new Intent("android.intent.action.VIEW",
-                       android.net.Uri.parse("baidumap://map?src=andr.baidu.openAPIdemo"));
-               cordova.startActivityForResult(null,intent,1); // 启动调用
-		   }
+//		   else  if (isInstallByread("com.baidu.BaiduMap")) {
+//			   //百度
+//               Intent intent = new Intent("android.intent.action.VIEW",
+//                       android.net.Uri.parse("baidumap://map?src=andr.baidu.openAPIdemo"));
+//               cordova.startActivityForResult(null,intent,1); // 启动调用
+//		   }
 		   return true;
 		}
 		// GPS 导航
@@ -54,13 +54,14 @@ public class Maps extends CordovaPlugin {
 			if (mEndLng != 0.0 && mEndLat !=0.0) {
                 //移动APP调起Android高德地图方式
                 Intent intent = new Intent("android.intent.action.VIEW",
-                        android.net.Uri.parse("androidamap://navi?sourceApplication=ZZl地图&lat=" + mEndLat + "&lon=" + mEndLng + "&dev=0&style=2"));
+                        android.net.Uri.parse("androidamap://navi?sourceApplication=SmartVoice&lat=" + mEndLat + "&lon=" + mEndLng + "&dev=0&style=2"));
                 intent.setPackage("com.autonavi.minimap");
                 if (isInstallByread("com.autonavi.minimap")) {
                     cordova.startActivityForResult(null,intent,1); // 启动调用
-                } else {
-                    startBaiduMap();
                 }
+//                else {
+//                    startBaiduMap();
+//                }
             } else{ 
 				Toast.makeText(cordova.getContext(), "终点坐标不明确，请确认", Toast.LENGTH_SHORT).show();
             } 
@@ -80,7 +81,7 @@ public class Maps extends CordovaPlugin {
         if (isInstallByread("com.baidu.BaiduMap")) {
             cordova.startActivityForResult(null,intent,1); // 启动调用
         } else { 
-			Toast.makeText(cordova.getContext(), "没有安装高德/百度地图客户端", Toast.LENGTH_SHORT).show();
+			Toast.makeText(cordova.getContext(), "没有安装高德客户端", Toast.LENGTH_SHORT).show();
         }
     }
 
