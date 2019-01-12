@@ -11,7 +11,7 @@ var maps = {
     },
     // 获取我当前的位置 IOS，返回GPS
     getMyLocation:function(success,error){
-        exec(success, error, 'Maps', 'gps', []);
+        exec(success, error, 'Maps', 'getMyLocation', []);
     }
 }
 
