@@ -17,6 +17,9 @@
                 <param name="android-package" value="org.apache.cordova.maps.Maps"/>
             </feature>  
         </config-file>  
+	<config-file target="AndroidManifest.xml" parent="/*">
+              <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION"/>
+        </config-file>
         <!-- src:是插件里存放对应.java的路径， target-dir:安装插件时把.java文件存放的位置，要和上面的value路径对应 -->
         <source-file src="src/android/Maps.java" target-dir="src/org/apache/cordova/maps" />
     </platform> 
