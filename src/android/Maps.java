@@ -43,8 +43,7 @@ public class Maps extends CordovaPlugin {
     private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
     private static final int PRIVATE_CODE = 1315;//开启GPS权限
     static final String[] LOCATIONGPS = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_PHONE_STATE};
+            Manifest.permission.ACCESS_FINE_LOCATION };
     private CallbackContext BleButtonCallbackContext = null;
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
@@ -88,6 +87,7 @@ public class Maps extends CordovaPlugin {
         }
         // 获取GPS
         else if ("getMyLocation".equals(action)) {
+            this.BleButtonCallbackContext = callbackContext;
             showGPSContacts();
             getLocation();
         }
